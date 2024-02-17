@@ -8,7 +8,7 @@ Scrolls through all of 16x64k (= 1MB) of memory accessible by the combination of
 
 #### Controls
 
-ESC => You can stop and re-start the scrolling by pressing ESC.
+ESC => You can pause and resume the scrolling by pressing ESC.
 
 #### Motivation
 
