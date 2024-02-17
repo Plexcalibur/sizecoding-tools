@@ -21,6 +21,7 @@ So I thought a tool for being able to look at the contents of the memory might b
 #### Possible future features
 
 - scrolling by arrow keys and page-up and -down keys
+- printing hashes for stripes of memory to make them comparable between different environments
 
 #### Visuals
 
