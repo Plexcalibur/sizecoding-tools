@@ -12,8 +12,9 @@ ESC => You can stop and re-start the scrolling by pressing ESC.
 
 #### Motivation
 
-I released an effect that under some circumstances did not work as expected, probably because it depended on the initial state of the memory when starting DosBox.
-When talking about this with [hannu](https://demozoo.org/sceners/130104/), he mentioned him researching the different initial memory states in all the possible execution environments for DOS code (like Dosbox, Dosbox-stagging, Dosbox-x, FreeDos, ... in all their different versions and execution environments).
+I released an [effect](https://demozoo.org/productions/338017/) that under some circumstances did not work as expected, probably because it depends on the initial state of the memory when starting DosBox.
+
+When talking about this with [hannu](https://demozoo.org/sceners/130104/), he mentioned him researching the different initial memory states in all the possible execution environments for DOS code (like Dosbox, Dosbox-stagging, Dosbox-x, FreeDos, ... in all their different versions and host OSes).
 
 So I thought a tool for being able to look at the contents of the memory might be helpful.
 
