@@ -1,11 +1,25 @@
 [org 100h]
 
-VERSION equ '1.0'
+VERSION equ '1.1'
 
     pusha
     push ds
     push es
     
+    mov ax,0x1112
+    int 0x10
+
+    ; print Version and registers
+    mov eax, 'Vers'
+    call printStringInEAX
+    mov eax, 'ion'
+    call printStringInEAX
+    mov eax, VERSION
+    call printStringInEAX
+    call printCRLF
+    call printRegisters
+    call printCRLF
+
     ; print Header line
     mov bx, cs
     call printBX
@@ -23,27 +37,75 @@ VERSION equ '1.0'
     call printCRLF
 
     ; real start
-start:
+loopOverview:
     mov ds, cx
     call hash64k
     mov cx, ds
     add cx, 0x1000
-    jnz start
+    jnz loopOverview
+
+    call printCRLF
+    mov eax, 'Deta'
+    call printStringInEAX
+    mov eax, 'ils:'
+    call printStringInEAX
+    call printCRLF
+
+    xor cx, cx
+loopDetails:
+    mov ds, cx
+    call hash64kDetails
+    mov cx, ds
+    add cx, 0x1000
+    jnz loopDetails
 
     pop es
     pop ds
     popa
 
-    call printRegisters
-    call printCRLF
-
-    mov eax, 'Ver'
-    call printStringInEAX
-    mov eax, VERSION
-    call printStringInEAX
-    call printCRLF
-
     ret ; exit back to DOS
+
+hash64kDetails:
+    pusha
+    ; 4k hashes
+    xor si, si
+    mov bp, 16
+  loop4kHashesDetails:
+    mov cx, 4096
+    call hash
+    or ax, ax
+    jz skipDetails
+
+    ; show details for 4kb segment
+    sub si, 4096
+    mov bx, si
+    shr bx, 4
+    mov ax, ds
+    add bx, ax
+    call printBX
+    mov ax, ': '
+    call printStringInEAX
+
+    ; makeHashes for 256 bytes
+    push bp
+    mov bp, 16
+  loop256bHashes:
+    mov cx, 256
+    call hash
+    mov bx, ax
+    call printBXorSpaces
+    dec bp
+    jnz loop256bHashes
+    pop bp
+    call printCRLF
+    ; end of inner Loop
+
+  skipDetails:
+    dec bp
+    jnz loop4kHashesDetails
+
+    popa
+    ret
 
 hash64k:
     pusha
@@ -93,13 +155,8 @@ printBXorSpaces:
     or bx, bx
     jnz printBX
     pusha
-    mov ah, 2
-    mov dl, ';'
-    int 21h
-    mov dl, '.'
-    int 21h
-    int 21h
-    int 21h
+    mov eax, ':...'
+    call printStringInEAX
     popa
     ret
 
@@ -170,6 +227,7 @@ printRegisters:
     mov ax, 'ES'
     mov bx, es
     call printRegInAXBX
+    call printCRLF
     popa
     ret
 
