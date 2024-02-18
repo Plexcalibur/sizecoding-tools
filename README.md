@@ -1,6 +1,41 @@
 # sizecoding-tools
 
-tools I created to aid sizecoding
+##### Motivation
+
+I released an [effect](https://demozoo.org/productions/338017/) that under some circumstances did not work as expected, probably because it depends on the initial state of the memory when starting DosBox.
+
+When talking about this with [hannu](https://demozoo.org/sceners/130104/), he mentioned him researching the different initial memory states in all the possible execution environments for DOS code (like Dosbox, Dosbox-stagging, Dosbox-x, FreeDos, ... in all their different versions and host OSes).
+
+So I thought a tool for being able to look at the contents of the memory might be helpful.
+
+## hashmem (version 1.0)
+
+Displays a map of hashes of the first 1MB of memory in chunks of 4kb blocks.
+This is useful to compare the initial state of DOS environments.
+
+#### Visuals
+
+- You see 1MB of memory in tabular form.
+- Each of the 16 rows spans 64kb of memory.
+- The 16 columns separate those 64kb in 16 patch of 4kb of memory and show the corresponding hashes.
+- When a hash is zero it is not displayed (for me, most of memory is filled with zeros).
+- Upper left corner shows the segment the code of `hashmem.com` is loaded to. So the hash of this 4kb patch (and the one a row below that, cause of the stack) is influenced by the code that is executed and does not necessarily stem from environmental differences.
+
+#### Observations
+
+- Graphics memory at 0xA000 is completely filled with zeros.
+- The first page (4kb) of textmode memory at 0xB800 is different every time, because the tool itself is actively writing on the screen.
+- The other pages of textmode memory are all the same but not zero.
+- In consecutive executions of this tool in the same environment only three of the 4kb patches change:
+  - 0x0000: Does change by time (maybe timer at 0x46C). You can see a blinking pixel using `showmem.com`.
+  - 0x0100: Does also change by time (no clue why). You can see several wildly blinking memory locations there (see `showmem.com` below). This 4kb page also contains the loaded programm, but as long as the version of code does not change it should not influence the hash of this page.
+  - 0xB800: Screencontent is different every time, because of changes in 0x0000 and 0x0100 -> so hash changes.
+
+![Screenshot](hashmem1.png)
+
+#### Maps of common platforms
+
+see [Samples](SAMPLES.md) for known memory-hash-maps dosbox installations.
 
 ## showmem (version 1.0)
 
@@ -9,14 +44,6 @@ Scrolls through all of 16x64k (= 1MB) of memory accessible by the combination of
 #### Controls
 
 ESC => You can pause and resume the scrolling by pressing ESC.
-
-#### Motivation
-
-I released an [effect](https://demozoo.org/productions/338017/) that under some circumstances did not work as expected, probably because it depends on the initial state of the memory when starting DosBox.
-
-When talking about this with [hannu](https://demozoo.org/sceners/130104/), he mentioned him researching the different initial memory states in all the possible execution environments for DOS code (like Dosbox, Dosbox-stagging, Dosbox-x, FreeDos, ... in all their different versions and host OSes).
-
-So I thought a tool for being able to look at the contents of the memory might be helpful.
 
 #### Possible future features
 

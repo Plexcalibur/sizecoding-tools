@@ -3,7 +3,22 @@
     mov al, 0x13
     int 10h
 
-    xor cx, cx
+    ; PALLETTE Color
+    mov cx, 0x100
+pallette_loop1:
+    mov dx, 3C8h    
+    mov al, cl
+    out dx, al
+    inc dx 
+    out dx, al
+    shr al, 1
+    out dx, al
+    shr al, 1
+    out dx, al
+    dec cx
+    test cl, ~15
+    jnz pallette_loop1
+
     mov ds, cx
     push 0xa000
     pop es
