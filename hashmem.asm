@@ -1,14 +1,17 @@
 [org 100h]
 
+VERSION equ '1.0'
+
+    pusha
+    push ds
+    push es
+    
+    ; print Header line
     mov bx, cs
     call printBX
 
-    ; print Header line
-    mov cx, 2
-    mov dl, ' '
-  leadingSpaces:
-    call printDL
-    loop leadingSpaces
+    mov ax, '  '
+    call printStringInEAX
 
     mov bx, 0
     mov cx, 16
@@ -17,7 +20,7 @@
     add bx, 0x100
     loop loopHeader
 
-    call fillLine
+    call printCRLF
 
     ; real start
 start:
@@ -27,18 +30,18 @@ start:
     add cx, 0x1000
     jnz start
 
-    mov dl, 'V'
-    call printDL
-    mov dl, 'e'
-    call printDL
-    mov dl, 'r'
-    call printDL
-    mov dl, '1'
-    call printDL
-    mov dl, '.'
-    call printDL
-    mov dl, '0'
-    call printDL
+    pop es
+    pop ds
+    popa
+
+    call printRegisters
+    call printCRLF
+
+    mov eax, 'Ver'
+    call printStringInEAX
+    mov eax, VERSION
+    call printStringInEAX
+    call printCRLF
 
     ret ; exit back to DOS
 
@@ -62,7 +65,7 @@ hash64k:
     dec bp
     jnz loop4kHashes
 
-    call fillLine
+    call printCRLF
 
     popa
     ret
@@ -130,12 +133,75 @@ printBX:
     popa
     ret    
 
-fillLine:
+printRegisters:
     pusha
-    mov dl, ' '
-    mov cx, 10
-  fillLineLoop:
-    call printDL
-    loop fillLineLoop
+    push bx
+    mov bx, ax
+    mov ax, 'AX'
+    call printRegInAXBX
+    pop bx
+    mov ax, 'BX'
+    call printRegInAXBX
+    mov ax, 'CX'
+    mov bx, cx
+    call printRegInAXBX
+    mov ax, 'DX'
+    mov bx, dx
+    call printRegInAXBX
+    mov ax, 'SI'
+    mov bx, si
+    call printRegInAXBX
+    mov ax, 'DI'
+    mov bx, di
+    call printRegInAXBX
+    mov ax, 'BP'
+    mov bx, bp
+    call printRegInAXBX
+    mov ax, 'SP'
+    mov bx, sp
+    call printRegInAXBX
+    call printCRLF
+    mov ax, 'CS'
+    mov bx, cs
+    call printRegInAXBX
+    mov ax, 'DS'
+    mov bx, ds
+    call printRegInAXBX
+    mov ax, 'ES'
+    mov bx, es
+    call printRegInAXBX
     popa
+    ret
+
+printRegInAXBX:
+    pusha
+    call printStringInEAX
+    mov dl, ':'
+    call printDL
+    call printBX
+    mov dl, ' '
+    call printDL
+    popa
+    ret
+
+printCRLF:
+    pusha
+    mov ax, 0x0a0d
+    call printStringInEAX
+    popa
+    ret
+
+printStringInEAX:
+    pusha
+    mov cx, 4
+  printEAXLoop:
+    mov dl, al
+    or dl, dl
+    jz skipEAXPrint
+    call printDL
+  skipEAXPrint:
+    ror eax, 8
+    loop printEAXLoop
+    popa
+    xor eax, eax
     ret
