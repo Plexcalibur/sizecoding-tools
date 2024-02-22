@@ -8,20 +8,27 @@ When talking about this with [hannu](https://demozoo.org/sceners/130104/), he me
 
 So I thought a tool for being able to look at the contents of the memory might be helpful.
 
-## hashmem (version 1.0)
+## hashmem (version 1.3)
 
-Displays a map of hashes of the first 1MB of memory in chunks of 4kb blocks.
+Displays a map of hashes of the first 1MB of memory in chunks of 1kb blocks and all non zero blocks in a 64byte-detailed view.
 This is useful to compare the initial state of DOS environments.
 
 #### Visuals
 
+- Version of hashmem.
+- Initial values of registers.
 - You see 1MB of memory in tabular form.
-- Each of the 16 rows spans 64kb of memory.
-- The 16 columns separate those 64kb in 16 patch of 4kb of memory and show the corresponding hashes.
-- When a hash is zero it is not displayed (for me, most of memory is filled with zeros).
-- Upper left corner shows the segment the code of `hashmem.com` is loaded to. So the hash of this 4kb patch (and the one a row below that, cause of the stack) is influenced by the code that is executed and does not necessarily stem from environmental differences.
+  - Each of the 16 rows spans 64kb of memory.
+  - Each line shows it starting segment address and then prints 64 hashes (1 char per hash) that each represent 1kb of memory.
+  - If the 1kb block of memory is completely filled with zeros the hash shows '.' or ':', otherwise it shows one of 0-9, a-z or A-Z.
+  - Most of memory is filled with zeros.
+  - At the end of each line the last 4 bytes of the 64kb segment are shown plain.
+  - Upper left corner shows the segment the code of `hashmem.com` is loaded to. So the hash of this 4kb patch (and the one a row below that, cause of the stack) is influenced by the code that is executed and does not necessarily stem from environmental differences.
+- "Details" - show a detailed view of all 4kb patches, that did contain at least one non-zero byte.
+  - the length of this view may vary
+  - the layout of each line is the same as in the first overview part, only now one char does represent a 64 byte block and not a 1kb block
 
-#### Observations
+#### Observations in Dosbox
 
 - Graphics memory at 0xA000 is completely filled with zeros.
 - The first page (4kb) of textmode memory at 0xB800 is different every time, because the tool itself is actively writing on the screen.
