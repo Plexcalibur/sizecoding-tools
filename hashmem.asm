@@ -1,6 +1,6 @@
 [org 100h]
 
-VERSION equ '1.2'
+VERSION equ '1.3'
 DEFAULTCHAR equ '.'
 SEPCHAR equ ':'
 
@@ -184,7 +184,7 @@ hash64k:
     call printDL
     dec bp
     jnz loop1kHashes
-    
+
     call printLast4Bytes
 
     call printCRLF
