@@ -42,7 +42,7 @@ This is useful to compare the initial state of DOS environments.
 
 #### Maps of common platforms
 
-see [Samples](SAMPLES.md) for known memory-hash-maps dosbox installations.
+see [SAMPLES.md](SAMPLES.md) and [samples/](samples/) for known memory-hash-maps dosbox installations.
 
 ## showmem (version 1.0)
 
