@@ -1,6 +1,6 @@
 [org 100h]
 
-VERSION equ '1.3'
+VERSION equ '1.4'
 DEFAULTCHAR equ '.'
 SEPCHAR equ ':'
 
@@ -316,6 +316,15 @@ printRegisters:
     call printRegInAXBX
     mov ax, 'ES'
     mov bx, es
+    call printRegInAXBX
+    mov ax, 'FS'
+    mov bx, fs
+    call printRegInAXBX
+    mov ax, 'GS'
+    mov bx, fs
+    call printRegInAXBX
+    mov ax, 'SS'
+    mov bx, ss
     call printRegInAXBX
     call printCRLF
     popa
